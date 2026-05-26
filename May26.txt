@@ -1,0 +1,109 @@
+1. Insert Documents into products Collection
+--------------------------------------------
+
+db.products.insertMany([
+{
+    _id: 1,
+    name: "xPhone",
+    price: 799,
+    releaseDate: ISODate("2011-05-14"),
+    spec: {
+        ram: 4,
+        screen: 6.5,
+        cpu: 2.66
+    },
+    color: ["white", "black"],
+    storage: [64, 128, 256]
+},
+
+{
+    _id: 2,
+    name: "xTablet",
+    price: 899,
+    releaseDate: ISODate("2011-09-01"),
+    spec: {
+        ram: 16,
+        screen: 9.5,
+        cpu: 3.66
+    },
+    color: ["white", "black", "purple"],
+    storage: [128, 256, 512]
+},
+
+{
+    _id: 3,
+    name: "SmartTablet",
+    price: 899,
+    releaseDate: ISODate("2015-01-14"),
+    spec: {
+        ram: 12,
+        screen: 9.7,
+        cpu: 3.66
+    },
+    color: ["blue"],
+    storage: [16, 64, 128]
+}
+])
+
+
+2. Display Product Name and CPU
+-------------------------------
+
+db.products.find(
+    {},
+    {
+        _id: 0,
+        name: 1,
+        "spec.cpu": 1
+    }
+)
+
+
+3. Display Second Storage Value Using Aggregation
+-------------------------------------------------
+
+db.products.aggregate([
+{
+    $project: {
+        _id: 0,
+        name: 1,
+        secondStorage: {
+            $arrayElemAt: ["$storage", 1]
+        }
+    }
+}
+])
+
+
+4. Find Products with Screen Size Less Than 7
+---------------------------------------------
+
+db.products.find(
+{
+    "spec.screen": {
+        $lt: 7
+    }
+},
+{
+    _id: 0,
+    name: 1,
+    "spec.screen": 1
+}
+)
+
+
+5. Find Products Having Storage Less Than 128
+---------------------------------------------
+
+db.products.find(
+{
+    storage: {
+        $lt: 128
+    }
+},
+{
+    _id: 0,
+    name: 1,
+    storage: 1
+}
+)
